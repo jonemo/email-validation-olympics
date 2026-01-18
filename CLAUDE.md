@@ -25,6 +25,10 @@ Must output CSV to stdout: `email,expected,actual,match`
 
 Always disable deliverability/DNS/SMTP checks in validation scripts.
 
+## GitHub Pages
+
+Results are published automatically when validators run. The `deploy-pages.yml` workflow generates an HTML comparison table at the repo's GitHub Pages URL.
+
 ## Adding Libraries
 
 Use the skill: `/add-library` or see `.claude/skills/add-library/SKILL.md`

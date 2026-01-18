@@ -1,0 +1,57 @@
+name: Deploy Results to Pages
+
+on:
+  workflow_run:
+    workflows: ["Run Email Validators"]
+    types: [completed]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download results artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: validation-results
+          path: results/
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Generate Markdown report
+        run: python scripts/generate_report.py
+
+      - name: Convert to HTML with Pandoc
+        uses: docker://pandoc/core:3.1
+        with:
+          args: >-
+            --standalone
+            --metadata title="Email Validator Comparison"
+            --css=style.css
+            -o site/index.html
+            site/report.md
+
+      - name: Copy CSS to site
+        run: cp scripts/style.css site/
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site/
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
