@@ -1,0 +1,2 @@
+foo@bar.com,valid,simple test case
+f o o@bar.com,invalid,contains spaces
