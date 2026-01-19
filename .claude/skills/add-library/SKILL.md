@@ -17,7 +17,7 @@ Create `libraries/<library-name>/` with:
 Must implement these targets:
 
 ```makefile
-ADDRESSLIST ?= ../../addresslist.csv
+ADDRESSLIST ?= ../../addresslist.txt
 
 build:    # Install dependencies, compile if needed
 run:      # Run validation (must use @-prefix to suppress command echo)
@@ -27,18 +27,16 @@ clean:    # Remove build artifacts
 ```
 
 The `run` target must:
-1. Accept `ADDRESSLIST` variable as path to CSV input
-2. Output CSV to stdout: `email,expected,actual,match`
-3. Be silent (use `@` prefix) so only CSV is output
+1. Accept `ADDRESSLIST` variable as path to input file (plain text, one email per line)
+2. Output to stdout: `valid   <email>` or `invalid <email>` (8-char prefix + email)
+3. Be silent (use `@` prefix) so only results are output
 
 ## Validation Script Requirements
 
-1. Read CSV from path given as command-line argument
-2. For each row: validate email syntax only (disable DNS/SMTP checks)
-3. Output CSV with header: `email,expected,actual,match`
-   - `actual`: "valid" or "invalid"
-   - `match`: "true" or "false"
-4. Quote emails containing commas
+1. Read plain text file from path given as command-line argument (one email per line)
+2. For each line: validate email syntax only (disable DNS/SMTP checks)
+3. Output one line per email: `valid   <email>` or `invalid <email>`
+   - "valid   " and "invalid " are both exactly 8 characters (padded with spaces)
 
 ## Language-Specific Patterns
 
@@ -55,6 +53,27 @@ run: build
 ```
 `.gitignore`: `.venv/`, `__pycache__/`, `*.pyc`
 
+```python
+#!/usr/bin/env python3
+import sys
+
+def validate(email: str) -> bool:
+    # Your validation logic here
+    pass
+
+def main():
+    with open(sys.argv[1], encoding="utf-8") as f:
+        for line in f:
+            email = line.rstrip("\n")
+            if not email:
+                continue
+            result = "valid   " if validate(email) else "invalid "
+            print(f"{result}{email}")
+
+if __name__ == "__main__":
+    main()
+```
+
 ### Node.js
 ```makefile
 build: node_modules
@@ -67,6 +86,23 @@ run: build
 	@node validate.js $(ADDRESSLIST)
 ```
 `.gitignore`: `node_modules/`, `package.json`, `package-lock.json`
+
+```javascript
+#!/usr/bin/env node
+const fs = require('fs');
+
+function validate(email) {
+    // Your validation logic here
+}
+
+const content = fs.readFileSync(process.argv[2], 'utf-8');
+for (const line of content.split('\n')) {
+    const email = line.replace(/\r$/, '');
+    if (!email) continue;
+    const result = validate(email) ? 'valid   ' : 'invalid ';
+    console.log(`${result}${email}`);
+}
+```
 
 ### Go
 ```makefile

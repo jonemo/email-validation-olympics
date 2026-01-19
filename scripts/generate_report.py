@@ -1,44 +1,67 @@
 #!/usr/bin/env python3
 """Generate Markdown report from validation results."""
 
-import csv
+import json
 from pathlib import Path
 
 
 def load_addresslist(path: Path) -> list[dict]:
-    """Load the expected results from addresslist.csv."""
+    """Load the expected results from addresslist.txt."""
     emails = []
-    with open(path, newline="", encoding="utf-8") as f:
-        reader = csv.reader(f)
-        for row in reader:
-            if len(row) >= 2:
-                emails.append({
-                    "email": row[0],
-                    "expected": row[1],
-                    "description": row[2] if len(row) > 2 else "",
-                })
+    lines = path.read_text(encoding="utf-8").split("\n")
+
+    i = 0
+    while i < len(lines):
+        # Skip empty lines
+        while i < len(lines) and lines[i].strip() == "":
+            i += 1
+        if i >= len(lines):
+            break
+
+        # Line 1: email
+        email = lines[i]
+        i += 1
+
+        # Line 2: JSON metadata
+        if i < len(lines) and lines[i].strip():
+            meta = json.loads(lines[i])
+            i += 1
+        else:
+            meta = {"valid": True}
+
+        # Skip blank separator
+        while i < len(lines) and lines[i].strip() == "":
+            i += 1
+
+        expected = "valid" if meta.get("valid", True) else "invalid"
+        description = meta.get("description", "")
+        emails.append({
+            "email": email,
+            "expected": expected,
+            "description": description,
+        })
     return emails
 
 
 def load_results(results_dir: Path) -> dict[str, dict[str, str]]:
     """Load all library results. Returns {library: {email: actual}}."""
     libraries = {}
-    for result_file in sorted(results_dir.glob("*.csv")):
+    for result_file in sorted(results_dir.glob("*.txt")):
         library_name = result_file.stem
         results = {}
-        with open(result_file, newline="", encoding="utf-8") as f:
-            reader = csv.reader(f)
-            for row in reader:
-                if len(row) >= 4:
-                    email, expected, actual, match = row[:4]
-                    results[email] = actual
+        for line in result_file.read_text(encoding="utf-8").split("\n"):
+            if not line:
+                continue
+            # Format: "valid   <email>" or "invalid <email>" (8 char prefix)
+            actual = line[:8].strip()
+            email = line[8:]
+            results[email] = actual
         libraries[library_name] = results
     return libraries
 
 
 def escape_markdown(text: str) -> str:
     """Escape special markdown characters in text."""
-    # Escape pipe characters for table cells
     return text.replace("|", "\\|").replace("\n", " ")
 
 
@@ -127,7 +150,7 @@ def generate_report(addresslist: list[dict], libraries: dict[str, dict[str, str]
 
 def main():
     root = Path(__file__).parent.parent
-    addresslist_path = root / "addresslist.csv"
+    addresslist_path = root / "addresslist.txt"
     results_dir = root / "results"
     site_dir = root / "site"
 
@@ -140,7 +163,7 @@ def main():
         print("Warning: No result files found in results/")
         report = "# Email Validator Comparison\n\nNo results available yet.\n"
     else:
-        report = "# Email Validator Comparison\n\n" + generate_report(addresslist, libraries)
+        report = generate_report(addresslist, libraries)
 
     output_path = site_dir / "report.md"
     output_path.write_text(report, encoding="utf-8")

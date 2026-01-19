@@ -1,0 +1,83 @@
+foo@bar.com
+{"valid": true, "description": "simple test case"}
+
+f o o@bar.com
+{"valid": false, "description": "contains spaces"}
+
+hi@stavros.io
+{"valid": true, "description": "", "source": "https://www.youtube.com/watch?v=xxX81WmXjPg"}
+
+hi@
+{"valid": false, "description": "missing domain part"}
+
+hi+there@stavros.io
+{"valid": true, "description": "plus is allowed"}
+
+stavros.k@stavros.io
+{"valid": true, "description": "dot in local part is valid"}
+
+stavros.@stavros.io
+{"valid": false, "description": "dot at end of local part is invalid"}
+
+stavros..k@stavros.io
+{"valid": false, "description": "two dots in sequence in local part"}
+
+!#$%&'*(-/=?@stavros.io
+{"valid": false, "description": ""}
+
+f*uck@stavros.io
+{"valid": true, "description": "asterisks are allowed in local part"}
+
+#$%!^/&@stavros.io
+{"valid": true, "description": ""}
+
+h(a)i@stavros.io
+{"valid": false, "description": "parentheses in name part"}
+
+(sta)vros@stavros.io
+{"valid": true, "description": "(sta) is a comment"}
+
+stavros@stavros.io(io)
+{"valid": true, "description": "(io) is a comment"}
+
+em@il@stavros.io
+{"valid": false, "description": "two at symbols"}
+
+"<\"@\"".!#%$@stavros.io
+{"valid": false, "description": "illegal characters"}
+
+<\"@\\".!#%$@stavros.io
+{"valid": false, "description": "illegal characters"}
+
+"hi@you"@stavros.io
+{"valid": true, "description": "quoted at symbol in local part is allowed"}
+
+"hi you"@stavros.io
+{"valid": true, "description": "quoted space in local part is allowed"}
+
+" "@stavros.io
+{"valid": true, "description": "quoted space in local part is allowed"}
+
+hi"@"you@stavros.io
+{"valid": false, "description": "the quotes must be dot-separated"}
+
+"<\"@\\"".!#%$@stavros.io
+{"valid": true, "description": "quotes are separated by dots"}
+
+hi\ there@stavros.io
+{"valid": false, "description": "spaces must be quoted even if escaped"}
+
+cow@[dead::beef]
+{"valid": true, "description": "IPv6 domain part"}
+
+stavros@io
+{"valid": true, "description": "domain part is TLD"}
+
+我買@屋企.香港
+{"valid": true, "description": ""}
+
+1@23456789
+{"valid": false, "description": "23456789 is not a valid TLD"}
+
+1@[23456789]
+{"valid": true, "description": "[23456789] is a decimal IPv4 address"}

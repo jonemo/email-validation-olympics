@@ -1,6 +1,6 @@
 GO := go
 BINARY := validate
-ADDRESSLIST ?= ../../addresslist.csv
+ADDRESSLIST ?= ../../addresslist.txt
 
 .PHONY: build run clean check version
 

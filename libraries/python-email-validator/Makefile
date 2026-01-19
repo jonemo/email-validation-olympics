@@ -1,7 +1,7 @@
 VENV := .venv
 PYTHON := $(VENV)/bin/python
 PIP := $(VENV)/bin/pip
-ADDRESSLIST ?= ../../addresslist.csv
+ADDRESSLIST ?= ../../addresslist.txt
 
 .PHONY: build run clean check version
 

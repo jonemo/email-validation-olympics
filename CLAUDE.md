@@ -4,9 +4,24 @@ Benchmark suite for comparing email address validation libraries across language
 
 ## Key Files
 
-- `addresslist.csv` - Test cases (email, expected validity, description)
+- `addresslist.txt` - Test cases in email + JSON metadata format
 - `libraries.md` - Catalog of validation libraries with metadata
 - `run_all.sh` - Runs all validators, outputs to `results/`
+
+## addresslist.txt Format
+
+```
+foo@bar.com
+{"valid": true, "description": "simple test case"}
+
+"hi@you"@stavros.io
+{"valid": true, "description": "quoted at symbol in local part", "source": "https://..."}
+
+```
+
+- Line 1: Email address (literal, no escaping needed)
+- Line 2: JSON with `valid` (bool), `description` (string), optional `source`
+- Line 3: Blank separator
 
 ## Library Interface
 
@@ -16,7 +31,8 @@ Each library in `libraries/` has a Makefile. The critical target is:
 make run ADDRESSLIST=<path>
 ```
 
-Must output CSV to stdout: `email,expected,actual,match`
+Input: Plain text file with one email per line.
+Output to stdout: `valid   <email>` or `invalid <email>` (8-char prefix + email)
 
 ## Important Distinction
 

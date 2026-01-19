@@ -1,6 +1,6 @@
 NODE := node
 NPM := npm
-ADDRESSLIST ?= ../../addresslist.csv
+ADDRESSLIST ?= ../../addresslist.txt
 
 .PHONY: build run clean check version
 

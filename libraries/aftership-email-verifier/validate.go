@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"fmt"
 	"os"
-	"strings"
 
 	emailverifier "github.com/AfterShip/email-verifier"
 )
@@ -19,29 +18,9 @@ func validate(email string) bool {
 	return ret.Syntax.Valid
 }
 
-func parseCSVLine(line string) []string {
-	var result []string
-	var current strings.Builder
-	inQuotes := false
-
-	for _, char := range line {
-		switch {
-		case char == '"':
-			inQuotes = !inQuotes
-		case char == ',' && !inQuotes:
-			result = append(result, current.String())
-			current.Reset()
-		default:
-			current.WriteRune(char)
-		}
-	}
-	result = append(result, current.String())
-	return result
-}
-
 func main() {
 	if len(os.Args) < 2 {
-		fmt.Fprintln(os.Stderr, "Usage: validate <addresslist.csv>")
+		fmt.Fprintln(os.Stderr, "Usage: validate <addresslist.txt>")
 		os.Exit(1)
 	}
 
@@ -60,37 +39,17 @@ func main() {
 	}
 	defer file.Close()
 
-	fmt.Println("email,expected,actual,match")
-
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
-		line := scanner.Text()
-		if strings.TrimSpace(line) == "" {
+		email := scanner.Text()
+		if email == "" {
 			continue
 		}
 
-		row := parseCSVLine(line)
-		email := row[0]
-		expected := ""
-		if len(row) > 1 {
-			expected = strings.ToLower(strings.TrimSpace(row[1]))
-		}
-
-		actual := "invalid"
+		result := "invalid "
 		if validate(email) {
-			actual = "valid"
+			result = "valid   "
 		}
-
-		match := "false"
-		if actual == expected {
-			match = "true"
-		}
-
-		// Quote email if it contains comma
-		emailOut := email
-		if strings.Contains(email, ",") {
-			emailOut = fmt.Sprintf(`"%s"`, email)
-		}
-		fmt.Printf("%s,%s,%s,%s\n", emailOut, expected, actual, match)
+		fmt.Printf("%s%s\n", result, email)
 	}
 }
