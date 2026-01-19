@@ -35,11 +35,16 @@ jobs:
       - name: Show results
         run: |
           echo "=== Results ==="
-          for f in results/*.csv; do
-            echo ""
-            echo "--- $(basename "$f") ---"
-            cat "$f"
-          done
+          if ls results/*.txt 1>/dev/null 2>&1; then
+            for f in results/*.txt; do
+              echo ""
+              echo "--- $(basename "$f") ---"
+              cat "$f"
+            done
+          else
+            echo "No results found!"
+            exit 1
+          fi
 
       - name: Upload results
         uses: actions/upload-artifact@v4
