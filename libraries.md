@@ -1,29 +1,29 @@
 ## The Libraries
 
-| Name                         | Repository                                                                            | Package                                                             | Language   |
-| ---------------------------- | ------------------------------------------------------------------------------------- | ------------------------------------------------------------------- | ---------- |
-| **validator.js**             | [validatorjs/validator.js](https://github.com/validatorjs/validator.js)               | [NPM](https://www.npmjs.com/package/validator)                      | JavaScript |
-| **deep-email-validator**     | [mfbx9da4/deep-email-validator](https://github.com/mfbx9da4/deep-email-validator)     | [NPM](https://www.npmjs.com/package/deep-email-validator)           | TypeScript |
-| **email-validator**          | [manishsaraan/email-validator](https://github.com/manishsaraan/email-validator)       | [NPM](https://www.npmjs.com/package/email-validator)                | JavaScript |
-| **Zod**                      | [colinhacks/zod](https://github.com/colinhacks/zod)                                   | [NPM](https://www.npmjs.com/package/zod)                            | JavaScript |
-| **Joi**                      | [hapijs/joi](https://github.com/hapijs/joi)                                           | [NPM](https://www.npmjs.com/package/joi)                            | JavaScript |
-| **python-email-validator**   | [JoshData/python-email-validator](https://github.com/JoshData/python-email-validator) | [PyPI](https://pypi.org/project/email-validator/)                   | Python     |
-| **pyIsEmail**                | [michaelherold/pyIsEmail](https://github.com/michaelherold/pyIsEmail)                 | [PyPI](https://pypi.org/project/pyIsEmail/)                         | Python     |
-| **PHP** `filter_var()`       | N/A                                                                                   | N/A                                                                 | PHP        |
-| **EmailValidator**           | [egulias/EmailValidator](https://github.com/egulias/EmailValidator)                   | [Packagist](https://packagist.org/packages/egulias/email-validator) | PHP        |
-| **Wordpress**                |                                                                                       |                                                                     | PHP        |
-| **Symfony**                  |                                                                                       |                                                                     | PHP        |
-| **Apache Commons Validator** | [apache/commons-validator](https://github.com/apache/commons-validator)               |                                                                     | Java       |
+| Name                         | Repository                                                                            | Package                                                                                 | Language   |
+| ---------------------------- | ------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- | ---------- |
+| **validator.js**             | [validatorjs/validator.js](https://github.com/validatorjs/validator.js)               | [NPM](https://www.npmjs.com/package/validator)                                          | JavaScript |
+| **deep-email-validator**     | [mfbx9da4/deep-email-validator](https://github.com/mfbx9da4/deep-email-validator)     | [NPM](https://www.npmjs.com/package/deep-email-validator)                               | TypeScript |
+| **email-validator**          | [manishsaraan/email-validator](https://github.com/manishsaraan/email-validator)       | [NPM](https://www.npmjs.com/package/email-validator)                                    | JavaScript |
+| **Zod**                      | [colinhacks/zod](https://github.com/colinhacks/zod)                                   | [NPM](https://www.npmjs.com/package/zod)                                                | JavaScript |
+| **Joi**                      | [hapijs/joi](https://github.com/hapijs/joi)                                           | [NPM](https://www.npmjs.com/package/joi)                                                | JavaScript |
+| **python-email-validator**   | [JoshData/python-email-validator](https://github.com/JoshData/python-email-validator) | [PyPI](https://pypi.org/project/email-validator/)                                       | Python     |
+| **pyIsEmail**                | [michaelherold/pyIsEmail](https://github.com/michaelherold/pyIsEmail)                 | [PyPI](https://pypi.org/project/pyIsEmail/)                                             | Python     |
+| **PHP** `filter_var()`       | N/A                                                                                   | N/A                                                                                     | PHP        |
+| **EmailValidator**           | [egulias/EmailValidator](https://github.com/egulias/EmailValidator)                   | [Packagist](https://packagist.org/packages/egulias/email-validator)                     | PHP        |
+| **Wordpress**                |                                                                                       |                                                                                         | PHP        |
+| **Symfony**                  |                                                                                       |                                                                                         | PHP        |
+| **Apache Commons Validator** | [apache/commons-validator](https://github.com/apache/commons-validator)               |                                                                                         | Java       |
 | **Hibernate Validator**      | [hibernate/hibernate-validator](https://github.com/hibernate/hibernate-validator)     | [Maven](https://mvnrepository.com/artifact/org.hibernate.validator/hibernate-validator) | Java       |
-| **AfterShip/email-verifier** | [AfterShip/email-verifier](https://github.com/AfterShip/email-verifier)               |                                                                     | Go         |
-| **go-mail/mail**             |                                                                                       |                                                                     | Go         |
-| **badoux/checkmail**         |                                                                                       |                                                                     | Go         |
-| **truemail**                 | [truemail-rb/truemail](https://github.com/truemail-rb/truemail)                       |                                                                     | Ruby       |
-| **valid_email2**             | [micke/valid_email2](https://github.com/micke/valid_email2)                           |                                                                     | Ruby       |
-| **EmailValidation**          | [jstedfast/EmailValidation](https://github.com/jstedfast/EmailValidation)             | [NuGet](https://www.nuget.org/packages/EmailValidation/)            | .NET       |
-| **email_address**            | [johnstonskj/rust-email_address](https://github.com/johnstonskj/rust-email_address)   | [crates.io](https://crates.io/crates/email_address)                 | Rust       |
-| **validator**                | [Keats/validator](https://github.com/Keats/validator)                                 | [crates.io](https://crates.io/crates/validator)                     | Rust       |
-| **MailChecker**              | [FGRibreau/mailchecker](https://github.com/FGRibreau/mailchecker)                     |                                                                     | Multi      |
+| **AfterShip/email-verifier** | [AfterShip/email-verifier](https://github.com/AfterShip/email-verifier)               |                                                                                         | Go         |
+| **net/mail**                 | [golang/go](https://github.com/golang/go)                                             | [pkg.go.dev](https://pkg.go.dev/net/mail)                                               | Go         |
+| **badoux/checkmail**         |                                                                                       |                                                                                         | Go         |
+| **truemail**                 | [truemail-rb/truemail](https://github.com/truemail-rb/truemail)                       |                                                                                         | Ruby       |
+| **valid_email2**             | [micke/valid_email2](https://github.com/micke/valid_email2)                           |                                                                                         | Ruby       |
+| **EmailValidation**          | [jstedfast/EmailValidation](https://github.com/jstedfast/EmailValidation)             | [NuGet](https://www.nuget.org/packages/EmailValidation/)                                | .NET       |
+| **email_address**            | [johnstonskj/rust-email_address](https://github.com/johnstonskj/rust-email_address)   | [crates.io](https://crates.io/crates/email_address)                                     | Rust       |
+| **validator**                | [Keats/validator](https://github.com/Keats/validator)                                 | [crates.io](https://crates.io/crates/validator)                                         | Rust       |
+| **MailChecker**              | [FGRibreau/mailchecker](https://github.com/FGRibreau/mailchecker)                     |                                                                                         | Multi      |
 
 ### validator.js
 
@@ -179,6 +179,24 @@ public class EmailWrapper {
 validator.validateValue(EmailWrapper.class, "email", emailString);
 ```
 
+### Go net/mail (Standard Library)
+
+- pkg.go.dev: https://pkg.go.dev/net/mail
+- Version tested: Go 1.23
+
+Go's standard library `net/mail` package provides RFC 5322 email address parsing via `mail.ParseAddress()`. It parses addresses in formats like `"Barry Gibbs <bg@example.com>"` or bare addresses like `foo@example.com`.
+
+This is a parser rather than a dedicated validator, so it may accept some unusual but technically valid RFC 5322 addresses. It does not perform DNS or SMTP verification.
+
+```go
+import "net/mail"
+
+_, err := mail.ParseAddress("test@example.com")
+if err == nil {
+    // Valid
+}
+```
+
 ### AfterShip email-verifier (Go)
 
 - GitHub: https://github.com/AfterShip/email-verifier
@@ -245,4 +263,5 @@ TODO
 
 - **pydantic** because it delegates email validation to python-email-validator.
 - **isemail**: because it is no longer maintained. It was a port of PHP is_email.
+- **go-mail** ([wneessen/go-mail](https://github.com/wneessen/go-mail)) because it delegates email validation to Go's standard library `net/mail`. Note: the naming history is confusing - go-gomail/gomail was the original (~2016), go-mail/mail was a fork (~2019), and wneessen/go-mail is the currently maintained version (2022+).
 - Libraries that send each email address to an API, for example [email-verifier](https://www.npmjs.com/package/email-verifier).
