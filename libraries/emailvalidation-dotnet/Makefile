@@ -11,11 +11,11 @@ emailvalidation-dotnet.csproj:
 	@$(DOTNET) restore --nologo -v q
 
 run: build
-	@$(DOTNET) run --no-build --nologo -- $(ADDRESSLIST)
+	@$(DOTNET) run --no-build -- $(ADDRESSLIST)
 
 check: build
 	@echo "Testing basic validation..."
-	@$(DOTNET) run --no-build --nologo -- /dev/stdin <<< "foo@example.com" | grep -q "^valid" && echo "OK"
+	@$(DOTNET) run --no-build -- /dev/stdin <<< "foo@example.com" | grep -q "^valid" && echo "OK"
 
 version: build
 	@$(DOTNET) list package | grep EmailValidation | awk '{print "Version:", $$NF}'

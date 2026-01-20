@@ -131,9 +131,23 @@ run: build
 
 **Note:** Use `--vcs none` to prevent `cargo init` from creating a nested `.git` folder.
 
+## Testing
+
+**Important:** The repo's `addresslist.txt` contains email + JSON metadata (alternating lines), NOT plain text. Don't test validators by running `make run` with the default `ADDRESSLIST` - this will process JSON lines as emails.
+
+To test a new validator:
+
+```bash
+# Option 1: Use run_all.sh (extracts emails to temp file automatically)
+./run_all.sh
+
+# Option 2: Create a simple test file for quick checks
+echo -e "test@example.com\ninvalid-email\nfoo@bar.baz" > /tmp/test-emails.txt
+make run ADDRESSLIST=/tmp/test-emails.txt
+```
+
 ## After Adding
 
-1. Test: `make run` in the library directory
-2. Run all: `./run_all.sh` from repo root
-3. Update `libraries.md` if not already listed
-4. Update `.github/workflows/run-validators.yml` if new language runtime needed
+1. Test using `./run_all.sh` from repo root (preferred)
+2. Update `libraries.md` if not already listed
+3. Update `.github/workflows/run-validators.yml` if new language runtime needed
