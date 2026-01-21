@@ -1,0 +1,26 @@
+ADDRESSLIST ?= ../../addresslist.txt
+
+.PHONY: build run clean check version
+
+build: .gems-installed
+
+.gems-installed: Gemfile
+	bundle install --quiet
+	@touch .gems-installed
+
+Gemfile:
+	@echo "source 'https://rubygems.org'" > Gemfile
+	@echo "gem 'truemail'" >> Gemfile
+
+run: build
+	@bundle exec ruby validate.rb $(ADDRESSLIST)
+
+check: build
+	@echo "Testing basic validation..."
+	@bundle exec ruby -e "require 'truemail'; Truemail.configure { |c| c.verifier_email = 'test@example.com'; c.default_validation_type = :regex }; puts Truemail.valid?('test@example.com') ? 'OK' : 'FAIL'"
+
+version: build
+	@bundle exec ruby -e "require 'truemail'; puts Truemail::VERSION"
+
+clean:
+	rm -rf .gems-installed Gemfile Gemfile.lock .bundle vendor

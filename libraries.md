@@ -11,19 +11,18 @@
 | **pyIsEmail**                | [michaelherold/pyIsEmail](https://github.com/michaelherold/pyIsEmail)                 | [PyPI](https://pypi.org/project/pyIsEmail/)                                             | Python     |
 | **PHP** `filter_var()`       | N/A                                                                                   | N/A                                                                                     | PHP        |
 | **EmailValidator**           | [egulias/EmailValidator](https://github.com/egulias/EmailValidator)                   | [Packagist](https://packagist.org/packages/egulias/email-validator)                     | PHP        |
-| **Wordpress**                |                                                                                       |                                                                                         | PHP        |
-| **Symfony**                  |                                                                                       |                                                                                         | PHP        |
+| **WordPress**                | [WordPress/WordPress](https://github.com/WordPress/WordPress)                         | N/A                                                                                     | PHP        |
+| **Symfony Validator**        | [symfony/validator](https://github.com/symfony/validator)                             | [Packagist](https://packagist.org/packages/symfony/validator)                           | PHP        |
 | **Apache Commons Validator** | [apache/commons-validator](https://github.com/apache/commons-validator)               |                                                                                         | Java       |
 | **Hibernate Validator**      | [hibernate/hibernate-validator](https://github.com/hibernate/hibernate-validator)     | [Maven](https://mvnrepository.com/artifact/org.hibernate.validator/hibernate-validator) | Java       |
 | **AfterShip/email-verifier** | [AfterShip/email-verifier](https://github.com/AfterShip/email-verifier)               |                                                                                         | Go         |
 | **net/mail**                 | [golang/go](https://github.com/golang/go)                                             | [pkg.go.dev](https://pkg.go.dev/net/mail)                                               | Go         |
-| **badoux/checkmail**         |                                                                                       |                                                                                         | Go         |
+| **checkmail**                | [badoux/checkmail](https://github.com/badoux/checkmail)                               | [pkg.go.dev](https://pkg.go.dev/github.com/badoux/checkmail)                            | Go         |
 | **truemail**                 | [truemail-rb/truemail](https://github.com/truemail-rb/truemail)                       |                                                                                         | Ruby       |
 | **valid_email2**             | [micke/valid_email2](https://github.com/micke/valid_email2)                           |                                                                                         | Ruby       |
 | **EmailValidation**          | [jstedfast/EmailValidation](https://github.com/jstedfast/EmailValidation)             | [NuGet](https://www.nuget.org/packages/EmailValidation/)                                | .NET       |
 | **email_address**            | [johnstonskj/rust-email_address](https://github.com/johnstonskj/rust-email_address)   | [crates.io](https://crates.io/crates/email_address)                                     | Rust       |
 | **validator**                | [Keats/validator](https://github.com/Keats/validator)                                 | [crates.io](https://crates.io/crates/validator)                                         | Rust       |
-| **MailChecker**              | [FGRibreau/mailchecker](https://github.com/FGRibreau/mailchecker)                     |                                                                                         | Multi      |
 
 ### validator.js
 
@@ -38,13 +37,15 @@ Actively maintained.
 
 ### deep-email-validator
 
+- GitHub:
+- Version tested: 0.1.21, last published in 2021
+
 Validates regex, typos, disposable, DNS, and SMTP. Node.js only.
 
-0.1.21, last published in 2021
-
-TODO
-
 ### email-validator
+
+- GitHub:
+- Version tested: Version 2.0.4, last published in 2018
 
 Simple, fast syntax validator.
 
@@ -138,6 +139,54 @@ https://www.php.net/manual/en/function.filter-var.php
 
 This advertises RFC 5321 compliance.
 
+### WordPress (PHP)
+
+- GitHub: https://github.com/WordPress/WordPress
+- Source: [wp-includes/formatting.php](https://github.com/WordPress/WordPress/blob/master/wp-includes/formatting.php)
+- Version tested: 6.7.1
+
+The [`is_email()`](https://developer.wordpress.org/reference/functions/is_email/) function is WordPress's built-in email validator. Given WordPress powers over 40% of websites, this is likely one of the most widely executed email validation functions in existence.
+
+```php
+if (is_email($email)) {
+    // Valid email
+}
+```
+
+The function performs these checks:
+
+- Minimum length of 6 characters
+- Must contain `@` after the first position
+- Local part: only allows `a-z0-9!#$%&'*+/=?^_`{|}~.-`
+- Domain: must have at least two parts, each containing only `a-z0-9-`
+- No leading/trailing hyphens or whitespace in domain parts
+
+The docs are refreshingly honest about its limitations:
+
+> Verifies that an email is valid.
+> Does not grok i18n domains. Not RFC compliant.
+
+Notably, WordPress rejects quoted local parts (`"hi@you"@example.com`) and IP address domains, making it stricter than RFC 5321 in some ways while being more permissive in others.
+
+### Symfony Validator (PHP)
+
+- GitHub: https://github.com/symfony/validator
+- Packagist: https://packagist.org/packages/symfony/validator
+- Docs: https://symfony.com/doc/current/reference/constraints/Email.html
+- Version tested: 7.4.3
+
+Symfony's Validator component provides an `Email` constraint with multiple validation modes. In `strict` mode, it uses [egulias/EmailValidator](https://github.com/egulias/EmailValidator) under the hood for RFC 5322 compliance.
+
+```php
+use Symfony\Component\Validator\Constraints\Email;
+use Symfony\Component\Validator\Validation;
+
+$validator = Validation::createValidator();
+$constraint = new Email(['mode' => Email::VALIDATION_MODE_STRICT]);
+$violations = $validator->validate($email, $constraint);
+```
+
+Despite using egulias internally, Symfony's strict mode does not produce identical results. For example, Symfony rejects quoted local parts like `"quoted"@example.com` while egulias with `RFCValidation` accepts them. This may be due to additional validation logic in the Symfony wrapper.
 
 ### EmailValidator (PHP)
 
@@ -151,7 +200,6 @@ Supports strict RFC 5321/5322 compliance and can warn about technically-valid-bu
 
 - GitHub: https://github.com/apache/commons-validator
 - Maven: https://mvnrepository.com/artifact/commons-validator/commons-validator
-- Language: Java
 - Version tested: 1.10.1
 
 Part of the Apache Commons project.
@@ -197,6 +245,29 @@ if err == nil {
 }
 ```
 
+### checkmail (Go)
+
+- GitHub: https://github.com/badoux/checkmail
+- pkg.go.dev: https://pkg.go.dev/github.com/badoux/checkmail
+- Version tested: 1.2.4
+
+A simple Go package for email validation with three levels of checking: format validation (regexp-based), domain validation (DNS lookup), and user validation (SMTP check).
+
+For this benchmark, we use only `ValidateFormat()` which performs syntax validation using a simple regexp based on the W3C HTML5 email specification:
+
+```go
+import "github.com/badoux/checkmail"
+
+err := checkmail.ValidateFormat("test@example.com")
+if err == nil {
+    // Valid format
+}
+```
+
+The library intentionally uses a simple validation approach. From its documentation:
+
+> Format (simple regexp, see: https://www.w3.org/TR/html5/forms.html#valid-e-mail-address and https://davidcel.is/posts/stop-validating-email-addresses-with-regex/)
+
 ### AfterShip email-verifier (Go)
 
 - GitHub: https://github.com/AfterShip/email-verifier
@@ -214,13 +285,43 @@ Zero dependencies. Regex, DNS, SMTP validation. Also available in Go.
 
 TODO
 
-### valid_email2
+### valid_email2 (Ruby)
+
+- Github:
+- Version tested:
+
+TODO: Edit this section. Add an explanation of what ActiveModel is, maybe link?
 
 ActiveModel validation. MX lookup, disposable blocklist.
+
+This is widely used in Rails applications and integrates with ActiveModel. It's probably the most common choice in the Ruby ecosystem.
+
+TODO Example code snippet, use for implementing test, then remove here:
+
+```ruby
+#!/usr/bin/env ruby
+require 'valid_email2'
+
+if ARGV.length < 1
+  STDERR.puts "Usage: validate.rb <addresslist.txt>"
+  exit 1
+end
+
+File.readlines(ARGV[0]).each do |line|
+  email = line.strip
+  next if email.empty?
+
+  result = ValidEmail2::Address.new(email).valid? ? "valid   " : "invalid "
+  puts "#{result}#{email}"
+end
+```
 
 TODO
 
 ### EmailValidation (.NET)
+
+- Github:
+- Version tested:
 
 Simple, correct .NET validator. RFC 6531 (internationalized) support.
 
@@ -253,15 +354,10 @@ fn validate(email: &str) -> bool {
 }
 ```
 
-### MailChecker
-
-Cross-language library available for JS, Python, PHP, Ruby, Go, Rust, and Elixir. Includes blocklist of 55k+ disposable email domains.
-
-TODO
-
 ## Other Options not Reviewed
 
 - **pydantic** because it delegates email validation to python-email-validator.
 - **isemail**: because it is no longer maintained. It was a port of PHP is_email.
 - **go-mail** ([wneessen/go-mail](https://github.com/wneessen/go-mail)) because it delegates email validation to Go's standard library `net/mail`. Note: the naming history is confusing - go-gomail/gomail was the original (~2016), go-mail/mail was a fork (~2019), and wneessen/go-mail is the currently maintained version (2022+).
+- **Mailchecker** ([FGRibreau/mailchecker](https://github.com/FGRibreau/mailchecker)) is a cross-language library that primarily compares an email address against a list of disposable email address providers. It also offers validation and defers this to PHP's `filter_var` and the regex from **validator.js** for all other languages.
 - Libraries that send each email address to an API, for example [email-verifier](https://www.npmjs.com/package/email-verifier).

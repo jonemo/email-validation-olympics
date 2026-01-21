@@ -1,0 +1,5 @@
+.gems-installed
+Gemfile
+Gemfile.lock
+.bundle/
+vendor/
