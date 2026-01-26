@@ -21,6 +21,7 @@
 | **truemail**                 | [truemail-rb/truemail](https://github.com/truemail-rb/truemail)                       |                                                                                         | Ruby       |
 | **valid_email2**             | [micke/valid_email2](https://github.com/micke/valid_email2)                           |                                                                                         | Ruby       |
 | **EmailValidation**          | [jstedfast/EmailValidation](https://github.com/jstedfast/EmailValidation)             | [NuGet](https://www.nuget.org/packages/EmailValidation/)                                | .NET       |
+| **MailAddress**              | [dotnet/runtime](https://github.com/dotnet/runtime)                                   | N/A                                                                                     | .NET       |
 | **email_address**            | [johnstonskj/rust-email_address](https://github.com/johnstonskj/rust-email_address)   | [crates.io](https://crates.io/crates/email_address)                                     | Rust       |
 | **validator**                | [Keats/validator](https://github.com/Keats/validator)                                 | [crates.io](https://crates.io/crates/validator)                                         | Rust       |
 
@@ -326,6 +327,28 @@ TODO
 Simple, correct .NET validator. RFC 6531 (internationalized) support.
 
 TODO
+
+### MailAddress (.NET Standard Library)
+
+- GitHub: https://github.com/dotnet/runtime
+- Docs: https://learn.microsoft.com/en-us/dotnet/api/system.net.mail.mailaddress
+- Version tested: .NET 8.0
+
+The `System.Net.Mail.MailAddress` class is .NET's built-in email address parser. It's part of the standard library and requires no additional packages.
+
+```csharp
+using System.Net.Mail;
+
+try {
+    var addr = new MailAddress(email);
+    // Valid if Address matches input (rejects display name format)
+    bool isValid = addr.Address == email;
+} catch {
+    // Invalid
+}
+```
+
+Note that `MailAddress` also accepts "Display Name <email>" format, so validation should verify that `Address` matches the original input to ensure only bare email addresses are accepted.
 
 ### email_address (Rust)
 

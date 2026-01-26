@@ -1,9 +1,7 @@
 #!/usr/bin/env php
 <?php
 /**
- * Email validation using Symfony Validator component with strict mode.
- * Strict mode uses egulias/email-validator for RFC 5322 compliance.
- * This is a syntax-only check, no DNS/SMTP verification.
+ * Email validation using Symfony Validator component in default mode.
  */
 
 require_once __DIR__ . '/vendor/autoload.php';
@@ -25,7 +23,7 @@ if ($handle === false) {
 }
 
 $validator = Validation::createValidator();
-$constraint = new Email(['mode' => Email::VALIDATION_MODE_STRICT]);
+$constraint = new Email(['mode' => Email::VALIDATION_MODE_HTML5]);
 
 while (($line = fgets($handle)) !== false) {
     $email = rtrim($line, "\r\n");

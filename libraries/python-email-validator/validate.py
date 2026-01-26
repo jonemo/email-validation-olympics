@@ -8,7 +8,12 @@ from email_validator import validate_email, EmailNotValidError
 def validate(email: str) -> bool:
     """Return True if email is valid, False otherwise."""
     try:
-        validate_email(email, check_deliverability=False)
+        validate_email(
+            email, 
+            check_deliverability=False,
+            allow_quoted_local=True,
+            allow_domain_literal=True,
+        )
         return True
     except EmailNotValidError:
         return False
