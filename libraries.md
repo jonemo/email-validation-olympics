@@ -9,6 +9,7 @@
 | **Joi**                      | [hapijs/joi](https://github.com/hapijs/joi)                                           | [NPM](https://www.npmjs.com/package/joi)                                                | JavaScript |
 | **python-email-validator**   | [JoshData/python-email-validator](https://github.com/JoshData/python-email-validator) | [PyPI](https://pypi.org/project/email-validator/)                                       | Python     |
 | **pyIsEmail**                | [michaelherold/pyIsEmail](https://github.com/michaelherold/pyIsEmail)                 | [PyPI](https://pypi.org/project/pyIsEmail/)                                             | Python     |
+| **Django EmailValidator**    | [django/django](https://github.com/django/django)                                     | [PyPI](https://pypi.org/project/Django/)                                                 | Python     |
 | **PHP** `filter_var()`       | N/A                                                                                   | N/A                                                                                     | PHP        |
 | **EmailValidator**           | [egulias/EmailValidator](https://github.com/egulias/EmailValidator)                   | [Packagist](https://packagist.org/packages/egulias/email-validator)                     | PHP        |
 | **WordPress**                | [WordPress/WordPress](https://github.com/WordPress/WordPress)                         | N/A                                                                                     | PHP        |
@@ -178,6 +179,30 @@ detailed_result = is_email(address, diagnose=True)
 
 - `check_dns` - Validate that the domain has MX records. Default: `False`.
 - `diagnose` - Return detailed diagnostic information instead of a boolean. Default: `False`.
+
+### Django EmailValidator (Python)
+
+- Github: https://github.com/django/django
+- PyPI: https://pypi.org/project/Django/
+- Docs: https://docs.djangoproject.com/en/6.0/ref/validators/#django.core.validators.EmailValidator
+- Version tested: 5.2.10
+- [Test code](https://github.com/jonemo/email-validation-olympics/tree/main/libraries/django-emailvalidator)
+
+Django's built-in email validator is used throughout the framework for model fields and form validation. It's one of the most widely deployed email validators given Django's popularity in Python web development.
+
+```python
+from django.core.validators import EmailValidator
+from django.core.exceptions import ValidationError
+
+validator = EmailValidator()
+try:
+    validator("test@example.com")
+    # Valid
+except ValidationError:
+    # Invalid
+```
+
+The validator uses a regex-based approach that aims to match the HTML5 email input specification while allowing some RFC 5322 edge cases. It's designed to be practical for web forms rather than strictly RFC-compliant.
 
 ### PHP Standard Library
 
