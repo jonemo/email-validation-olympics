@@ -11,6 +11,7 @@ build: .gems-installed
 Gemfile:
 	@echo "source 'https://rubygems.org'" > Gemfile
 	@echo "gem 'truemail'" >> Gemfile
+	@echo "gem 'net-smtp'" >> Gemfile
 
 run: build
 	@BUNDLE_PATH=vendor/bundle bundle exec ruby validate.rb $(ADDRESSLIST)
