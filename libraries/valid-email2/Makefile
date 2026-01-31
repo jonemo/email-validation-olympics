@@ -5,7 +5,7 @@ ADDRESSLIST ?= ../../addresslist.txt
 build: .gems-installed
 
 .gems-installed: Gemfile
-	bundle install --quiet
+	bundle install --quiet --path vendor/bundle
 	@touch .gems-installed
 
 Gemfile:
