@@ -52,6 +52,14 @@ jobs:
           ruby-version: '3.3'
           bundler-cache: false
 
+      - name: Set up Perl
+        uses: shogo82148/actions-setup-perl@v1
+        with:
+          perl-version: '5.38'
+
+      - name: Install cpanm
+        run: curl -L https://cpanmin.us | perl - App::cpanminus
+
       - name: Run all validators
         run: ./run_all.sh
 

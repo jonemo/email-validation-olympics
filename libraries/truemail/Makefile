@@ -5,7 +5,7 @@ ADDRESSLIST ?= ../../addresslist.txt
 build: .gems-installed
 
 .gems-installed: Gemfile
-	bundle install --quiet --path vendor/bundle
+	BUNDLE_PATH=vendor/bundle bundle install --quiet
 	@touch .gems-installed
 
 Gemfile:
@@ -13,7 +13,7 @@ Gemfile:
 	@echo "gem 'truemail'" >> Gemfile
 
 run: build
-	@bundle exec ruby validate.rb $(ADDRESSLIST)
+	@BUNDLE_PATH=vendor/bundle bundle exec ruby validate.rb $(ADDRESSLIST)
 
 check: build
 	@echo "Testing basic validation..."

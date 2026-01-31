@@ -63,12 +63,18 @@ for dir in "$SCRIPT_DIR"/libraries/*/; do
     fi
 
     echo "Running $name..."
-    if make -s -C "$dir" run ADDRESSLIST="$EMAILS_FILE" > "$RESULTS_DIR/$name.txt" 2>/dev/null; then
+    ERROR_FILE=$(mktemp)
+    if make -s -C "$dir" run ADDRESSLIST="$EMAILS_FILE" > "$RESULTS_DIR/$name.txt" 2>"$ERROR_FILE"; then
         echo "  -> $RESULTS_DIR/$name.txt"
     else
         echo "  -> FAILED"
+        if [ -s "$ERROR_FILE" ]; then
+            echo "     Error output:"
+            sed 's/^/     /' "$ERROR_FILE"
+        fi
         rm -f "$RESULTS_DIR/$name.txt"
     fi
+    rm -f "$ERROR_FILE"
 done
 
 echo
