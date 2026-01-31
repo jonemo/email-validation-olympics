@@ -27,6 +27,7 @@
 | **email_address**            | [johnstonskj/rust-email_address](https://github.com/johnstonskj/rust-email_address)   | [crates.io](https://crates.io/crates/email_address)                                     | Rust       |
 | **validator**                | [Keats/validator](https://github.com/Keats/validator)                                 | [crates.io](https://crates.io/crates/validator)                                         | Rust       |
 | **Email::Valid**             | [Perl-Email-Project/Email-Valid](https://github.com/Perl-Email-Project/Email-Valid)   | [CPAN](https://metacpan.org/pod/Email::Valid)                                           | Perl       |
+| **libvldmail**               | [dertuxmalwieder/libvldmail](https://github.com/dertuxmalwieder/libvldmail)           | N/A                                                                                     | C          |
 
 ### validator.js
 
@@ -589,6 +590,28 @@ my $valid = Email::Valid->address($email);
 print $valid ? "Valid email" : "Invalid email";
 ```
 
+### libvldmail (C)
+
+- Github: https://github.com/dertuxmalwieder/libvldmail
+- Version tested: git master
+- [Test code](https://github.com/jonemo/email-validation-olympics/tree/main/libraries/libvldmail)
+
+A C library for email syntax validation only.
+Follows RFC 6531 by default with fallback to RFC 5321.
+
+```c
+#include <vldmail.h>
+
+valid_mail_t validator = validate_email(L"foo@bar.com");
+if (validator.success != 0) {
+    // Valid
+}
+```
+
+**Configuration options (preprocessor parameters):**
+
+- `NO_UNICODE_MAIL_PLEASE` - Restrict validation to ASCII characters only.
+- `STRICT_VALIDATION` - Apply stricter RFC standards, marking deprecated formats as invalid.
 
 ## Other Options not Reviewed
 
