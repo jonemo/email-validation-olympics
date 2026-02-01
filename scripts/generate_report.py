@@ -101,48 +101,72 @@ def generate_report(addresslist: list[dict], libraries: dict[str, dict[str, str]
         lines.append(f"| {lib} | {s['correct']} | {s['false_negatives']} | {s['false_positives']} |")
     lines.append("")
 
-    # Expected valid emails table
+    # Expected valid emails table (transposed: libraries as rows, test cases as columns)
     valid_emails = [a for a in addresslist if a["expected"] == "valid"]
     if valid_emails:
         lines.append("## Expected Valid Emails\n")
         lines.append("- ✓ = correctly accepted")
         lines.append("- ✗ = false negative (incorrectly rejected)\n")
-        header = "| Email |" + " | ".join(library_names) + " |"
-        separator = "|-------|" + "|".join(["-----"] * len(library_names)) + "|"
+        # Header with numbered columns (1-indexed)
+        col_numbers = [str(i + 1) for i in range(len(valid_emails))]
+        header = "| Library | " + " | ".join(col_numbers) + " |"
+        separator = "|---------|" + "|".join(["---"] * len(valid_emails)) + "|"
         lines.append(header)
         lines.append(separator)
-        for addr in valid_emails:
-            email = escape_markdown(addr["email"])
+        # Each library is a row
+        for lib in library_names:
             cells = []
-            for lib in library_names:
+            for addr in valid_emails:
                 actual = libraries[lib].get(addr["email"], "")
                 if actual == "valid":
                     cells.append("✓")
                 else:
                     cells.append("✗")
-            lines.append(f"| `{email}` | " + " | ".join(cells) + " |")
+            lines.append(f"| {lib} | " + " | ".join(cells) + " |")
+        lines.append("")
+        # Legend mapping numbers to emails
+        lines.append("### Test Case Legend\n")
+        for i, addr in enumerate(valid_emails):
+            email = escape_markdown(addr["email"])
+            desc = addr.get("description", "")
+            if desc:
+                lines.append(f"{i + 1}. `{email}` - {desc}")
+            else:
+                lines.append(f"{i + 1}. `{email}`")
         lines.append("")
 
-    # Expected invalid emails table
+    # Expected invalid emails table (transposed: libraries as rows, test cases as columns)
     invalid_emails = [a for a in addresslist if a["expected"] == "invalid"]
     if invalid_emails:
         lines.append("## Expected Invalid Emails\n")
         lines.append("- ✓ = correctly rejected")
         lines.append("- ✗ = false positive (incorrectly accepted)\n")
-        header = "| Email |" + " | ".join(library_names) + " |"
-        separator = "|-------|" + "|".join(["-----"] * len(library_names)) + "|"
+        # Header with numbered columns (1-indexed)
+        col_numbers = [str(i + 1) for i in range(len(invalid_emails))]
+        header = "| Library | " + " | ".join(col_numbers) + " |"
+        separator = "|---------|" + "|".join(["---"] * len(invalid_emails)) + "|"
         lines.append(header)
         lines.append(separator)
-        for addr in invalid_emails:
-            email = escape_markdown(addr["email"])
+        # Each library is a row
+        for lib in library_names:
             cells = []
-            for lib in library_names:
+            for addr in invalid_emails:
                 actual = libraries[lib].get(addr["email"], "")
                 if actual == "invalid":
                     cells.append("✓")
                 else:
                     cells.append("✗")
-            lines.append(f"| `{email}` | " + " | ".join(cells) + " |")
+            lines.append(f"| {lib} | " + " | ".join(cells) + " |")
+        lines.append("")
+        # Legend mapping numbers to emails
+        lines.append("### Test Case Legend\n")
+        for i, addr in enumerate(invalid_emails):
+            email = escape_markdown(addr["email"])
+            desc = addr.get("description", "")
+            if desc:
+                lines.append(f"{i + 1}. `{email}` - {desc}")
+            else:
+                lines.append(f"{i + 1}. `{email}`")
         lines.append("")
 
     return "\n".join(lines)
