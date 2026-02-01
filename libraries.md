@@ -3,13 +3,13 @@
 | Name                         | Repository                                                                            | Package                                                                                 | Language   |
 | ---------------------------- | ------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- | ---------- |
 | **validator.js**             | [validatorjs/validator.js](https://github.com/validatorjs/validator.js)               | [NPM](https://www.npmjs.com/package/validator)                                          | JavaScript |
-| **deep-email-validator**     | [mfbx9da4/deep-email-validator](https://github.com/mfbx9da4/deep-email-validator)     | [NPM](https://www.npmjs.com/package/deep-email-validator)                               | TypeScript |
+| **deep-email-validator**     | [mfbx9da4/deep-email-validator](https://github.com/mfbx9da4/deep-email-validator)     | [NPM](https://www.npmjs.com/package/deep-email-validator)                               | JavaScript |
 | **email-validator**          | [manishsaraan/email-validator](https://github.com/manishsaraan/email-validator)       | [NPM](https://www.npmjs.com/package/email-validator)                                    | JavaScript |
 | **Zod**                      | [colinhacks/zod](https://github.com/colinhacks/zod)                                   | [NPM](https://www.npmjs.com/package/zod)                                                | JavaScript |
 | **Joi**                      | [hapijs/joi](https://github.com/hapijs/joi)                                           | [NPM](https://www.npmjs.com/package/joi)                                                | JavaScript |
 | **python-email-validator**   | [JoshData/python-email-validator](https://github.com/JoshData/python-email-validator) | [PyPI](https://pypi.org/project/email-validator/)                                       | Python     |
 | **pyIsEmail**                | [michaelherold/pyIsEmail](https://github.com/michaelherold/pyIsEmail)                 | [PyPI](https://pypi.org/project/pyIsEmail/)                                             | Python     |
-| **Django EmailValidator**    | [django/django](https://github.com/django/django)                                     | [PyPI](https://pypi.org/project/Django/)                                                 | Python     |
+| **Django EmailValidator**    | [django/django](https://github.com/django/django)                                     | [PyPI](https://pypi.org/project/Django/)                                                | Python     |
 | **PHP** `filter_var()`       | N/A                                                                                   | N/A                                                                                     | PHP        |
 | **EmailValidator**           | [egulias/EmailValidator](https://github.com/egulias/EmailValidator)                   | [Packagist](https://packagist.org/packages/egulias/email-validator)                     | PHP        |
 | **WordPress**                | [WordPress/WordPress](https://github.com/WordPress/WordPress)                         | N/A                                                                                     | PHP        |
@@ -33,7 +33,7 @@
 
 - Github: https://github.com/validatorjs/validator.js
 - NPM: https://www.npmjs.com/package/validator
-- Version tested: 13.12.0
+- Version tested: 13.15.26 (published December 2025)
 - [Test code](https://github.com/jonemo/email-validation-olympics/tree/main/libraries/validator-js)
 
 A library of string validators and sanitizers for JavaScript with over 23,000 Github stars.
@@ -45,6 +45,14 @@ import isEmail from "validator/lib/isEmail";
 validator.isEmail("foo@bar.com");
 ```
 
+**Configuration options:**
+
+- `allow_display_name` - Allow display names like `Name <email@example.com>`. Default: `false`.
+- `require_display_name` - Require a display name. Default: `false`.
+- `allow_utf8_local_part` - Allow UTF-8 characters in the local part. Default: `true`.
+- `allow_ip_domain` - Allow IP addresses in the domain part. Default: `false`.
+- `domain_specific_validation` - Extra validation for Gmail addresses. Default: `false`.
+- `blacklisted_chars` - String of characters not allowed in the local part.
 
 Actively maintained.
 
@@ -52,7 +60,7 @@ Actively maintained.
 
 - Github: https://github.com/manishsaraan/email-validator
 - NPM: https://npmjs.com/package/email-validator
-- Version tested: Version 2.0.4
+- Version tested: 2.0.4 (published May 2018)
 - [Test code](https://github.com/jonemo/email-validation-olympics/tree/main/libraries/email-validator)
 
 The second most downloaded email validation library on NPM, by a wide margin, behind validator.js.
@@ -72,10 +80,34 @@ No configuration options available.
 
 - Github: https://github.com/mfbx9da4/deep-email-validator
 - NPM: https://npmjs.com/package/deep-email-validator
-- Version tested: 0.1.21
+- Version tested: 0.1.21 (published December 2021)
 - [Test code](https://github.com/jonemo/email-validation-olympics/tree/main/libraries/deep-email-validator)
 
 The "deep" in the name refers to the list of features beyond validation: Typos, disposable check, DNS lookup, and SMTP.
+
+```js
+import validate from "deep-email-validator";
+
+const main = async () => {
+  await validate({
+    email: "name@example.org",
+    sender: "name@example.org",
+    validateRegex: true,
+    validateMx: true,
+    validateTypo: true,
+    validateDisposable: true,
+    validateSMTP: true,
+  });
+};
+```
+
+The validation part is rather simple:
+
+> Validates email looks like an email i.e. contains an "@" and a "." to the right of it.
+
+Ironically this is still more strict than Stavro's suggested method because the requirement for a "." rules out top level domains, for example "lewis@[ferrari](https://icannwiki.org/.ferrari)". Using top-level domains like that has been banned by ICANN since 2013, so maybe not a big deal.
+
+deep-email-validator was last updated in 2021. I include it here as an example for the deep bench of [email validation packages on NPM](https://www.npmjs.com/search?q=keywords:email-validation) that gained modest traction by Github stars and downloads.
 
 Note that deep-email-validator is Node.js only Javascript, so no good for your web form.
 
@@ -83,7 +115,7 @@ Note that deep-email-validator is Node.js only Javascript, so no good for your w
 
 - Github: https://github.com/colinhacks/zod
 - NPM: https://www.npmjs.com/package/zod
-- Version tested: 4.3.5
+- Version tested: 4.3.5 (published January 2026)
 - [Test code](https://github.com/jonemo/email-validation-olympics/tree/main/libraries/zod)
 
 Zod is a Javascript object validation library that has a [field type for email addresses](https://zod.dev/api#emails):
@@ -112,7 +144,7 @@ The library also bundles a handful of alternative email regexes and allows you t
 
 - Github: https://github.com/hapijs/joi
 - NPM: https://www.npmjs.com/package/joi
-- Version tested: 18.0.2
+- Version tested: 18.0.2 (published November 2025)
 - [Test code](https://github.com/jonemo/email-validation-olympics/tree/main/libraries/joi)
 
 [Joi](https://joi.dev) is another Javascript validation library that includes a [field type for email addresses](https://joi.dev/api/?v=17.13.3#stringemailoptions):
@@ -127,11 +159,20 @@ The documentation mentions one edge case:
 
 > Note that quoted email addresses (e.g. "test"@example.com) are not supported and will fail validation.
 
+These config options exist:
+
+- `allowFullyQualified` - if true, domains ending with a . character are permitted. Defaults to false.
+- `allowUnicode` - if true, Unicode characters are permitted. Defaults to true.
+- `ignoreLength` - if true, ignore invalid email length errors. Defaults to false.
+- `minDomainSegments` - number of segments required for the domain. The default setting excludes single segment domains such as example@io which is a valid email but very uncommon. Defaults to 2.
+- `maxDomainSegments` - maximum number of allowed domain segments. Default to no limit.
+- `tlds` - options for TLD (top level domain) validation. By default, the TLD must be a valid name listed on the IANA registry. To disable validation, set tlds to false.
+
 ### python-email-validator
 
 - Github: https://github.com/JoshData/python-email-validator
 - PyPI: https://pypi.org/project/email-validator/
-- Version tested: 2.3.0
+- Version tested: 2.3.0 (published August 2025)
 - [Test code](https://github.com/jonemo/email-validation-olympics/tree/main/libraries/python-email-validator)
 
 This is currently the most popular option for Python with 20 million weekly PyPI downloads.
@@ -162,7 +203,7 @@ The Readme declares:
 
 - Github: https://github.com/michaelherold/pyIsEmail
 - PyPI: https://pypi.org/project/pyIsEmail/
-- Version tested: 2.0.1
+- Version tested: 2.0.1 (published 2018)
 - [Test code](https://github.com/jonemo/email-validation-olympics/tree/main/libraries/pyisemail)
 
 A Python port of [the `is_email` PHP library](https://github.com/dominicsayers/isemail) (which is not covered again in this blog post).
@@ -186,7 +227,7 @@ detailed_result = is_email(address, diagnose=True)
 - Github: https://github.com/django/django
 - PyPI: https://pypi.org/project/Django/
 - Docs: https://docs.djangoproject.com/en/6.0/ref/validators/#django.core.validators.EmailValidator
-- Version tested: 5.2.10
+- Version tested: 5.2.10 (published January 2026)
 - [Test code](https://github.com/jonemo/email-validation-olympics/tree/main/libraries/django-emailvalidator)
 
 Django's built-in email validator is used throughout the framework for model fields and form validation. It's one of the most widely deployed email validators given Django's popularity in Python web development.
@@ -205,9 +246,17 @@ except ValidationError:
 
 The validator uses a regex-based approach that aims to match the HTML5 email input specification while allowing some RFC 5322 edge cases. It's designed to be practical for web forms rather than strictly RFC-compliant.
 
+**Configuration options:**
+
+- `allowlist` - Allowlist of domains (e.g., `['example.com']`). Only these domains will be accepted.
+- `message` - Custom error message for validation failures.
+- `code` - Custom error code for validation failures.
+
+Django requires minimal settings configuration to use the validator standalone (outside of a Django project).
+
 ### PHP Standard Library
 
-- Version tested: 8.3.30
+- Version tested: 8.3.30 (published January 2026)
 - [Test code](https://github.com/jonemo/email-validation-olympics/tree/main/libraries/php-filter-var)
 
 PHP has an email validator built into the standard library:
@@ -216,14 +265,17 @@ PHP has an email validator built into the standard library:
 filter_var($email, FILTER_VALIDATE_EMAIL)
 ```
 
-https://www.php.net/manual/en/function.filter-var.php
+It's not easily discovered in [the documentation](https://www.php.net/manual/en/function.filter-var.php) because it is a flag to the more general `filter_var` function.
 
-This advertises RFC 5321 compliance.
+No configuration options available.
+
+It advertises RFC 5321 compliance.
+The PHP docs allow for comments to be posted under each page, and naturally there are comments pointing out deviations from the standard, including [this highly upvoted one from 2013](https://www.php.net/manual/en/function.filter-var.php#112492).
 
 ### WordPress (PHP)
 
 - Github: https://github.com/WordPress/WordPress
-- Version tested: 6.7.1
+- Version tested: 6.9 (published January 2026)
 - [Test code](https://github.com/jonemo/email-validation-olympics/tree/main/libraries/wordpress-is-email)
 
 The [`is_email()`](https://developer.wordpress.org/reference/functions/is_email/) function is WordPress's built-in email validator.
@@ -232,9 +284,7 @@ WordPress powers over 40% of websites, this is likely one of the most widely exe
 Because Wordpress' internal functions aren't normally used as a library, for my test I copied the `is_email` source code from [wp-includes/formatting.php](https://github.com/WordPress/WordPress/blob/master/wp-includes/formatting.php).
 
 ```php
-if (is_email($email)) {
-    // Valid email
-}
+$result = is_email($email);  // returns email if valid, false otherwise
 ```
 
 The function performs these checks:
@@ -254,7 +304,7 @@ No configuration options available.
 ### Symfony Validator (PHP)
 
 - Github: https://github.com/symfony/validator
-- Version tested: 7.4.3
+- Version tested: 7.4.3 (published December 2025)
 - [Test code](https://github.com/jonemo/email-validation-olympics/tree/main/libraries/symfony-validator)
 
 Symfony's Validator component provides an `Email` constraint with multiple validation modes.
@@ -270,12 +320,15 @@ $constraint = new Email(['mode' => Email::VALIDATION_MODE_HTML5]);
 $violations = $validator->validate($email, $constraint);
 ```
 
-Despite using egulias internally, Symfony's strict mode does not produce identical results. For example, Symfony rejects quoted local parts like `"quoted"@example.com` while egulias with `RFCValidation` accepts them. This may be due to additional validation logic in the Symfony wrapper.
+**Configuration options:**
+
+- `VALIDATION_MODE_HTML5` - Uses the HTML5 regex pattern (default). Good for web forms.
+- `VALIDATION_MODE_STRICT` - Uses egulias/EmailValidator for strict RFC compliance. Requires `egulias/email-validator` to be installed.
 
 ### EmailValidator (PHP)
 
 - Github: https://github.com/egulias/EmailValidator
-- Version tested: 4.0.4
+- Version tested: 4.0.4 (published March 2025)
 - [Test code](https://github.com/jonemo/email-validation-olympics/tree/main/libraries/egulias-email-validator)
 
 The most comprehensive PHP validator with multiple validation strategies.
@@ -289,11 +342,18 @@ $validator = new EmailValidator();
 $validator->isValid("example@example.com", new RFCValidation());
 ```
 
+**Validation strategies:**
+
+- `RFCValidation` - Validates according to RFC 5321/5322 (used for this comparison).
+- `NoRFCWarningsValidation` - Fails on RFC warnings (stricter than RFCValidation).
+- `DNSCheckValidation` - Checks if the domain has valid DNS records.
+- `SpoofCheckValidation` - Detects spoofing attempts using similar-looking characters.
+
 ### Apache Commons Validator (Java)
 
 - Github: https://github.com/apache/commons-validator
 - Maven: https://mvnrepository.com/artifact/commons-validator/commons-validator
-- Version tested: 1.10.1
+- Version tested: 1.10.1 (published November 2025)
 - [Test code](https://github.com/jonemo/email-validation-olympics/tree/main/libraries/apache-commons-validator)
 
 Part of the Apache Commons project.
@@ -320,7 +380,7 @@ This code is nearly 20 years old and references a long-gone website https://java
 
 - Github: https://github.com/hibernate/hibernate-validator
 - Maven: https://mvnrepository.com/artifact/org.hibernate.validator/hibernate-validator
-- Version tested: 9.0.0.Final
+- Version tested: 9.1.0.Final (published November 2025)
 - [Test code](https://github.com/jonemo/email-validation-olympics/tree/main/libraries/hibernate-validator)
 
 I am way out of my depth on this, but Claude asked me to tell you:
@@ -343,15 +403,17 @@ public class EmailWrapper {
 validator.validateValue(EmailWrapper.class, "email", emailString);
 ```
 
+No configuration options available for the basic `@Email` annotation.
+
 ### Go net/mail (Standard Library)
 
 - pkg.go.dev: https://pkg.go.dev/net/mail
-- Version tested: 1.23
+- Version tested: 1.23 (published August 2024)
 - [Test code](https://github.com/jonemo/email-validation-olympics/tree/main/libraries/net-mail)
 
 Go's standard library `net/mail` package provides RFC 5322 email address parsing via `mail.ParseAddress()`.
 
-This is a parser rather than a dedicated validator, so it may accept some unusual but technically valid RFC 5322 addresses. It does not perform DNS or SMTP verification.
+This is a parser rather than a dedicated validator, so it may accept some unusual but technically valid RFC 5322 addresses.
 
 ```go
 import "net/mail"
@@ -362,10 +424,12 @@ if err == nil {
 }
 ```
 
+No configuration options available.
+
 ### checkmail (Go)
 
 - Github: https://github.com/badoux/checkmail
-- Version tested: 1.2.4
+- Version tested: 1.2.4 (published January 2024)
 - [Test code](https://github.com/jonemo/email-validation-olympics/tree/main/libraries/checkmail)
 
 127 lines of Go that cover format validation, DNS lookup, and verification with SMTP.
@@ -381,6 +445,12 @@ if err == nil {
 }
 ```
 
+**Available functions:**
+
+- `ValidateFormat()` - Syntax validation only (used for this comparison).
+- `ValidateHost()` - Validates format + checks DNS MX records.
+- `ValidateHostAndUser()` - Validates format + DNS + verifies mailbox via SMTP.
+
 The library intentionally uses a simple validation approach. From its documentation:
 
 > Format (simple regexp, see: https://www.w3.org/TR/html5/forms.html#valid-e-mail-address and https://davidcel.is/posts/stop-validating-email-addresses-with-regex/)
@@ -388,7 +458,7 @@ The library intentionally uses a simple validation approach. From its documentat
 ### email-verifier (Go)
 
 - Github: https://github.com/AfterShip/email-verifier
-- Version tested: 1.4.1
+- Version tested: 1.4.1 (published September 2024)
 - [Test code](https://github.com/jonemo/email-validation-olympics/tree/main/libraries/aftership-email-verifier)
 
 A full-featured Go library that supports syntax validation, MX lookup, SMTP verification, disposable email detection, and typo suggestions.
@@ -406,14 +476,18 @@ ret, _ := verifier.Verify("test@example.com")
 isValid := ret != nil && ret.Syntax.Valid
 ```
 
+**Configuration options:**
+
+- `.DisableSMTPCheck()` - Disable SMTP verification.
+- `.DisableDomainSuggest()` - Disable typo suggestions.
+- `.DisableAutoUpdateDisposable()` - Disable auto-updating disposable email list.
+
 ### truemail (Ruby)
 
 - Github: https://github.com/truemail-rb/truemail
 - Rubygems: https://rubygems.org/gems/truemail
-- Version tested: 3.3.1
+- Version tested: 3.3.1 (published April 2024)
 - [Test code](https://github.com/jonemo/email-validation-olympics/tree/main/libraries/truemail)
-
-**Note:** This library's test runner failed during benchmarking. Results are not included in the comparison table.
 
 truemail offers the full menu of checks: Domain allow/deny lists, regex (the part we care about), DNS check, SMTP check.
 
@@ -466,7 +540,7 @@ Both Ruby original and Go port received their most recent commit in 2024.
 
 - Github: https://github.com/micke/valid_email2
 - Rubygems: https://rubygems.org/gems/valid_email2
-- Version tested: 7.0.13
+- Version tested: 7.0.13 (published May 2025)
 - [Test code](https://github.com/jonemo/email-validation-olympics/tree/main/libraries/valid-email2)
 
 This is widely used in Rails applications and integrates with [ActiveModel](https://guides.rubyonrails.org/active_model_basics.html), Rails' system for object validation. It's probably the most common choice in the Ruby ecosystem.
@@ -477,6 +551,13 @@ require 'valid_email2'
 email = ValidEmail2::Address.new("test@example.com")
 email.valid?  # true
 ```
+
+**Configuration options:**
+
+- `.valid?` - Basic syntax validation (used for this comparison).
+- `.valid_mx?` - Also validates MX records exist.
+- `.disposable?` - Checks against disposable email provider list.
+- `.blacklisted?` - Checks against custom blacklist.
 
 ### System.Net.Mail.MailAddress (.NET Standard Library)
 
@@ -495,17 +576,21 @@ using System.Net.Mail;
 
 try {
     var addr = new MailAddress(email);
-    // Valid if Address matches input (rejects display name format)
     bool isValid = addr.Address == email;
 } catch {
     // Invalid
 }
 ```
+
+Note that MailAddress also accepts "Display Name <email>" format, so validation should verify that `Address` matches the original input to ensure that part of your input string wasn't interpreted as display name.
+
+No configuration options available.
+
 ### EmailValidation (.NET)
 
 - Github: https://github.com/jstedfast/EmailValidation
 - NuGet: https://www.nuget.org/packages/EmailValidation/
-- Version tested: 1.3.0
+- Version tested: 1.3.0 (published March 2025)
 - [Test code](https://github.com/jonemo/email-validation-olympics/tree/main/libraries/emailvalidation-dotnet)
 
 Simple, correct .NET validator with RFC 6531 (internationalized) support. Written by Jeffrey Stedfast, who also authored MailKit.
@@ -516,11 +601,13 @@ using EmailValidation;
 bool isValid = EmailValidator.Validate("test@example.com");
 ```
 
+No configuration options available.
+
 ### MailKit (.NET)
 
 - Github: https://github.com/jstedfast/MailKit
 - NuGet: https://www.nuget.org/packages/MailKit
-- Version tested: 4.10.0
+- Version tested: 4.10.0 (published January 2025)
 - [Test code](https://github.com/jonemo/email-validation-olympics/tree/main/libraries/mailkit-dotnet)
 
 MailKit is a cross-platform mail client library for .NET, written by Jeffrey Stedfast (who also wrote EmailValidation). While primarily an IMAP/SMTP client, it includes email address parsing via `MailboxAddress.TryParse()` from the MimeKit dependency.
@@ -531,11 +618,15 @@ using MimeKit;
 bool isValid = MailboxAddress.TryParse("test@example.com", out var _);
 ```
 
+The validation behavior differs slightly from EmailValidation because MailKit's parser is designed for real-world email handling rather than strict validation.
+
+No configuration options available.
+
 ### email_address (Rust)
 
 - Github: https://github.com/johnstonskj/rust-email_address
 - crates.io: https://crates.io/crates/email_address
-- Version tested: 0.2.9
+- Version tested: 0.2.9 (published July 2024)
 - [Test code](https://github.com/jonemo/email-validation-olympics/tree/main/libraries/rust-email-address)
 
 An RFC 5322 compliant email address newtype for Rust.
@@ -554,7 +645,7 @@ No configuration options available.
 
 - Github: https://github.com/Keats/validator
 - crates.io: https://crates.io/crates/validator
-- Version tested: 0.20.0
+- Version tested: 0.20.0 (published January 2025)
 - [Test code](https://github.com/jonemo/email-validation-olympics/tree/main/libraries/validator-rust)
 
 Comprehensive validation library for Rust, akin to Zod in Node and Pydantic in Python.
@@ -574,7 +665,7 @@ No configuration options available for email validation.
 
 - Github: https://github.com/Perl-Email-Project/Email-Valid
 - CPAN: https://metacpan.org/pod/Email::Valid
-- Version tested: 1.204
+- Version tested: 1.204 (published January 2024)
 - [Test code](https://github.com/jonemo/email-validation-olympics/tree/main/libraries/email-valid-perl)
 
 The closest I've ever come to Perl is as a marketing (sic) intern at Nestoria where I was sitting next to some Perl wizards.
@@ -590,10 +681,17 @@ my $valid = Email::Valid->address($email);
 print $valid ? "Valid email" : "Invalid email";
 ```
 
+**Configuration options:**
+
+- `-mxcheck` - Check for valid MX records.
+- `-tldcheck` - Validate the top-level domain.
+- `-fqdn` - Require a fully qualified domain name.
+- `-local_rules` - Apply local rules (disabled for this comparison).
+
 ### libvldmail (C)
 
 - Github: https://github.com/dertuxmalwieder/libvldmail
-- Version tested: git master
+- Version tested: git master (latest commit November 2025)
 - [Test code](https://github.com/jonemo/email-validation-olympics/tree/main/libraries/libvldmail)
 
 A C library for email syntax validation only.
@@ -616,7 +714,7 @@ if (validator.success != 0) {
 ## Other Options not Reviewed
 
 - **pydantic** because it delegates email validation to python-email-validator.
-- **isemail**: because it is no longer maintained. It was a port of PHP is_email.
+- [**skeggse/isemail**](https://github.com/skeggse/isemail) because it is no longer maintained. Just like `pyIsEmail`, it is a port of the [`is_email` PHP library](https://github.com/dominicsayers/isemail).
 - [**go-mail**](https://github.com/wneessen/go-mail) because it delegates email validation to Go's standard library `net/mail`. Note: The naming history is confusing - go-gomail/gomail was the original (~2016), go-mail/mail was a fork (~2019), and wneessen/go-mail is the currently maintained version (2022+).
 - [**Mailchecker**](https://github.com/FGRibreau/mailchecker) is a cross-language library that primarily compares an email address against a list of disposable email address providers. It also offers validation and defers this to PHP's `filter_var` and to the regex from **validator.js** for all other languages.
 - [**mailcheck.js**](https://github.com/mailcheck/mailcheck)) because it is not a full validator, it finds domain misspellings for a fixed list of domains. And because it's been unmaintained for 10 years, after a successful run as jQuery plugin.

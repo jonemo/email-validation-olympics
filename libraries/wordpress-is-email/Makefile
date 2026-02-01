@@ -1,6 +1,6 @@
 PHP := php
 ADDRESSLIST ?= ../../addresslist.txt
-WP_VERSION := 6.7.1
+WP_VERSION := 6.9
 WP_FORMATTING_URL := https://raw.githubusercontent.com/WordPress/WordPress/$(WP_VERSION)/wp-includes/formatting.php
 
 .PHONY: build run clean check version
