@@ -7,6 +7,7 @@
 | **email-validator**          | [manishsaraan/email-validator](https://github.com/manishsaraan/email-validator)       | [NPM](https://www.npmjs.com/package/email-validator)                                    | JavaScript |
 | **Zod**                      | [colinhacks/zod](https://github.com/colinhacks/zod)                                   | [NPM](https://www.npmjs.com/package/zod)                                                | JavaScript |
 | **Joi**                      | [hapijs/joi](https://github.com/hapijs/joi)                                           | [NPM](https://www.npmjs.com/package/joi)                                                | JavaScript |
+| **email-addresses**          | [jackbearheart/email-addresses](https://github.com/jackbearheart/email-addresses)     | [NPM](https://www.npmjs.com/package/email-addresses)                                    | JavaScript |
 | **python-email-validator**   | [JoshData/python-email-validator](https://github.com/JoshData/python-email-validator) | [PyPI](https://pypi.org/project/email-validator/)                                       | Python     |
 | **pyIsEmail**                | [michaelherold/pyIsEmail](https://github.com/michaelherold/pyIsEmail)                 | [PyPI](https://pypi.org/project/pyIsEmail/)                                             | Python     |
 | **Django EmailValidator**    | [django/django](https://github.com/django/django)                                     | [PyPI](https://pypi.org/project/Django/)                                                | Python     |
@@ -167,6 +168,26 @@ These config options exist:
 - `minDomainSegments` - number of segments required for the domain. The default setting excludes single segment domains such as example@io which is a valid email but very uncommon. Defaults to 2.
 - `maxDomainSegments` - maximum number of allowed domain segments. Default to no limit.
 - `tlds` - options for TLD (top level domain) validation. By default, the TLD must be a valid name listed on the IANA registry. To disable validation, set tlds to false.
+
+### email-addresses (Javascript)
+
+- Github: https://github.com/jackbearheart/email-addresses
+- NPM: https://www.npmjs.com/package/email-addresses
+- Version tested: 5.0.0 (published November 2020)
+- [Test code](https://github.com/jonemo/email-validation-olympics/tree/main/libraries/email-addresses)
+
+An RFC 5322 email address parser that handles full email address formats including display names and comments. For validating just the address portion (RFC 5321), the documentation recommends using node-address-rfc2821 instead.
+
+```js
+const addrs = require("email-addresses");
+
+// Returns address object if valid, null if invalid
+addrs.parseOneAddress("test@example.com");
+```
+
+The library is designed as a parser rather than a validator, so it accepts all RFC 5322 compliant addresses including display names like `"Bob Example" <bob@example.com>`. For this comparison, we use `parseOneAddress()` which returns null for invalid addresses.
+
+No configuration options available for basic validation.
 
 ### python-email-validator
 
