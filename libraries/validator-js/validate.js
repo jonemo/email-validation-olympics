@@ -7,7 +7,7 @@ const fs = require('fs');
 const validator = require('validator');
 
 function validate(email) {
-    return validator.isEmail(email);
+    return validator.isEmail(email, { allow_ip_domain: true });
 }
 
 function main() {

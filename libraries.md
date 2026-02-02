@@ -43,10 +43,12 @@ Provides an `isEmail()` function with configurable options for allowing display 
 ```js
 import isEmail from "validator/lib/isEmail";
 
-validator.isEmail("foo@bar.com");
+validator.isEmail("foo@bar.com", { allow_ip_domain: true });
 ```
 
-**Configuration options:**
+By default, IP addresses in the domain part are rejected. For an accurate comparison with the test cases, the `allow_ip_domain` option is enabled.
+
+Configuration options:
 
 - `allow_display_name` - Allow display names like `Name <email@example.com>`. Default: `false`.
 - `require_display_name` - Require a display name. Default: `false`.
@@ -54,8 +56,6 @@ validator.isEmail("foo@bar.com");
 - `allow_ip_domain` - Allow IP addresses in the domain part. Default: `false`.
 - `domain_specific_validation` - Extra validation for Gmail addresses. Default: `false`.
 - `blacklisted_chars` - String of characters not allowed in the local part.
-
-Actively maintained.
 
 ### email-validator (Javascript)
 
@@ -67,6 +67,7 @@ Actively maintained.
 The second most downloaded email validation library on NPM, by a wide margin, behind validator.js.
 Advertised as "a simple module", and simple it is:
 The entire library is 33 lines of code in a single file, plus 100 lines of tests.
+Within those 33 lines is no room for parameters or config options.
 The last update was pushed in 2018, which some may call "abandoned" and others "finished".
 
 ```js
@@ -75,7 +76,47 @@ const validator = require("email-validator");
 validator.validate("foo@bar.com"); // true
 ```
 
-No configuration options available.
+The library correctly rejects all of Stavros' invalid test cases, as well as 10 out of 16 valid test cases.
+
+### email-addresses (Javascript)
+
+- Github: https://github.com/jackbearheart/email-addresses
+- NPM: https://www.npmjs.com/package/email-addresses
+- Version tested: 5.0.0 (published November 2020)
+- [Test code](https://github.com/jonemo/email-validation-olympics/tree/main/libraries/email-addresses)
+
+Neck to neck with email-validator in terms of downloads, but quite different in terms of LOC:
+This one has 1098 lines of code plus a couple of hundred lines of test coverage.
+
+The library is implements as a recursive decent parser for the grammar specified in RFC 5322.
+This means that for any valid email address, this library yields a AST of the components that match definitions in the RFC which you can query individually.
+
+For the test script I used `parseOneAddress()` which returns null for invalid addresses.
+
+An RFC 5322 email address parser that handles full email address formats including display names and comments. For validating just the address portion (RFC 5321), the documentation recommends using node-address-rfc2821 instead.
+
+```js
+const addrs = require("email-addresses");
+
+// Returns address object if valid, null if invalid
+const parsed = addrs.parseOneAddress("test@example.com");
+parsed.local; // => test
+parsed.domain; // => example.com
+
+// Or use addrs() to get access to the AST
+const parsed2 = addrs("test@example.com");
+parsed.ast.children; // => tree object
+```
+
+There are a few configuration options, all of which I kept the default values for:
+
+- `rfc6532` enables Unicode support. Warning: Depending on which function you use, the default value changes.
+- `strict` turns off features of RFC 5322 marked "Obsolete".
+- `rejectTLD` requires at least one dot in the domain part. This one was tricky: Enabling it would have removed one false positive from the results but added a false negative.
+
+The strict adherence to RFC 5322 means that email-addresses supports display names (`"Display Name" <display.name@gmail.com>`) which Stavros examples don't cover.
+The docs recommend [node-address-rfc2821](https://www.npmjs.com/package/address-rfc2821) as a similar parser implementation for just the address part.
+A future version of this post should include that one, I saw the reference too late to include it this time around.
 
 ### deep-email-validator (Javascript, Node.js only)
 
@@ -169,26 +210,6 @@ These config options exist:
 - `maxDomainSegments` - maximum number of allowed domain segments. Default to no limit.
 - `tlds` - options for TLD (top level domain) validation. By default, the TLD must be a valid name listed on the IANA registry. To disable validation, set tlds to false.
 
-### email-addresses (Javascript)
-
-- Github: https://github.com/jackbearheart/email-addresses
-- NPM: https://www.npmjs.com/package/email-addresses
-- Version tested: 5.0.0 (published November 2020)
-- [Test code](https://github.com/jonemo/email-validation-olympics/tree/main/libraries/email-addresses)
-
-An RFC 5322 email address parser that handles full email address formats including display names and comments. For validating just the address portion (RFC 5321), the documentation recommends using node-address-rfc2821 instead.
-
-```js
-const addrs = require("email-addresses");
-
-// Returns address object if valid, null if invalid
-addrs.parseOneAddress("test@example.com");
-```
-
-The library is designed as a parser rather than a validator, so it accepts all RFC 5322 compliant addresses including display names like `"Bob Example" <bob@example.com>`. For this comparison, we use `parseOneAddress()` which returns null for invalid addresses.
-
-No configuration options available for basic validation.
-
 ### python-email-validator
 
 - Github: https://github.com/JoshData/python-email-validator
@@ -214,11 +235,21 @@ except EmailNotValidError as e:
 ```
 
 The default settings allow UTF-8 and verifies with a DNS check, but disallow quotes and IP addresses.
-I enable the default-off flags for a fair comparison.
+I enable the default-off flags for a fair comparison against Stavros' examples.
 
 The Readme declares:
 
 > This is an opinionated library. You should definitely also consider using the less-opinionated pyIsEmail if it works better for you.
+
+In the test, python-email-validator rejects all invalid test cases and 6 valid ones, validating the "opinionated" statement.
+
+By the way, while the test script ignores the validation failure messages, you should not. They are quite specific:
+
+- `f o o@bar.com` → "The email address contains invalid characters before the @-sign: SPACE"
+- `stavros.@stavros.io` → "An email address cannot have a period immediately before the @-sign"
+- `stavros..k@stavros.io` → "An email address cannot have two periods in a row"
+- `em@il@stavros.io` → "The part after the @-sign contains invalid characters: '@'"
+- `hi\ there@stavros.io` → "The email address contains invalid characters before the @-sign: "\", SPACE"
 
 ### pyIsEmail (Python)
 
@@ -238,7 +269,7 @@ bool_result = is_email(address)
 detailed_result = is_email(address, diagnose=True)
 ```
 
-**Configuration options:**
+Configuration options:
 
 - `check_dns` - Validate that the domain has MX records. Default: `False`.
 - `diagnose` - Return detailed diagnostic information instead of a boolean. Default: `False`.
@@ -267,7 +298,7 @@ except ValidationError:
 
 The validator uses a regex-based approach that aims to match the HTML5 email input specification while allowing some RFC 5322 edge cases. It's designed to be practical for web forms rather than strictly RFC-compliant.
 
-**Configuration options:**
+Configuration options:
 
 - `allowlist` - Allowlist of domains (e.g., `['example.com']`). Only these domains will be accepted.
 - `message` - Custom error message for validation failures.
@@ -287,11 +318,14 @@ filter_var($email, FILTER_VALIDATE_EMAIL)
 ```
 
 It's not easily discovered in [the documentation](https://www.php.net/manual/en/function.filter-var.php) because it is a flag to the more general `filter_var` function.
+There are no configuration options available.
 
-No configuration options available.
+The PHP docs advertise RFC 5321 compliance.
+But the PHP docs also allow for comments to be posted under each page.
+Naturally there are comments pointing out deviations from the standard, including [this highly upvoted one from 2013](https://www.php.net/manual/en/function.filter-var.php#112492).
 
-It advertises RFC 5321 compliance.
-The PHP docs allow for comments to be posted under each page, and naturally there are comments pointing out deviations from the standard, including [this highly upvoted one from 2013](https://www.php.net/manual/en/function.filter-var.php#112492).
+The test results suggest that PHP is overly strict about the local part of the email and quite flexible about the domain part:
+It accepts the IPv6 address and the naked TLD (both correct per RFC) but also the numbers-only domain (incorrect).
 
 ### WordPress (PHP)
 
@@ -302,7 +336,7 @@ The PHP docs allow for comments to be posted under each page, and naturally ther
 The [`is_email()`](https://developer.wordpress.org/reference/functions/is_email/) function is WordPress's built-in email validator.
 WordPress powers over 40% of websites, this is likely one of the most widely executed email validation functions in existence.
 
-Because Wordpress' internal functions aren't normally used as a library, for my test I copied the `is_email` source code from [wp-includes/formatting.php](https://github.com/WordPress/WordPress/blob/master/wp-includes/formatting.php).
+Because Wordpress' internal functions aren't normally used as a library, for my test I copied the `is_email` source code from [wp-includes/formatting.php](https://github.com/WordPress/WordPress/blob/master/wp-includes/formatting.php). Then the usage becomes trivial:
 
 ```php
 $result = is_email($email);  // returns email if valid, false otherwise
@@ -319,6 +353,8 @@ The function performs these checks:
 The docs are refreshingly honest about its limitations:
 
 > "Does not grok i18n domains." [...] "Not RFC compliant."
+
+The test results confirm this: The function rejects all the theoreticaly valid but unusual strings and slips up only on the two invalid cases that contain dots in the wrong places.
 
 No configuration options available.
 
@@ -341,7 +377,7 @@ $constraint = new Email(['mode' => Email::VALIDATION_MODE_HTML5]);
 $violations = $validator->validate($email, $constraint);
 ```
 
-**Configuration options:**
+Configuration options:
 
 - `VALIDATION_MODE_HTML5` - Uses the HTML5 regex pattern (default). Good for web forms.
 - `VALIDATION_MODE_STRICT` - Uses egulias/EmailValidator for strict RFC compliance. Requires `egulias/email-validator` to be installed.
@@ -387,7 +423,7 @@ EmailValidator validator = EmailValidator.getInstance();
 boolean isValid = validator.isValid("test@example.com");
 ```
 
-**Configuration options:**
+Configuration options:
 
 - `getInstance()` - Default instance, no local addresses or TLD-only domains.
 - `getInstance(allowLocal)` - Allow local addresses (e.g., `user@localhost`).
@@ -497,7 +533,7 @@ ret, _ := verifier.Verify("test@example.com")
 isValid := ret != nil && ret.Syntax.Valid
 ```
 
-**Configuration options:**
+Configuration options:
 
 - `.DisableSMTPCheck()` - Disable SMTP verification.
 - `.DisableDomainSuggest()` - Disable typo suggestions.
@@ -564,7 +600,7 @@ Both Ruby original and Go port received their most recent commit in 2024.
 - Version tested: 7.0.13 (published May 2025)
 - [Test code](https://github.com/jonemo/email-validation-olympics/tree/main/libraries/valid-email2)
 
-This is widely used in Rails applications and integrates with [ActiveModel](https://guides.rubyonrails.org/active_model_basics.html), Rails' system for object validation. It's probably the most common choice in the Ruby ecosystem.
+This is widely used in Rails applications because it integrates with [ActiveModel](https://guides.rubyonrails.org/active_model_basics.html), Rails' system for object validation. It's probably the most common choice in the Ruby ecosystem.
 
 ```ruby
 require 'valid_email2'
@@ -573,12 +609,8 @@ email = ValidEmail2::Address.new("test@example.com")
 email.valid?  # true
 ```
 
-**Configuration options:**
-
-- `.valid?` - Basic syntax validation (used for this comparison).
-- `.valid_mx?` - Also validates MX records exist.
-- `.disposable?` - Checks against disposable email provider list.
-- `.blacklisted?` - Checks against custom blacklist.
+The validation process is not configurable.
+Use `.valid_mx?`, `.disposable?`, `.blacklisted?` for the other checks offered by the library.
 
 ### System.Net.Mail.MailAddress (.NET Standard Library)
 
@@ -650,9 +682,8 @@ No configuration options available.
 - Version tested: 0.2.9 (published July 2024)
 - [Test code](https://github.com/jonemo/email-validation-olympics/tree/main/libraries/rust-email-address)
 
-An RFC 5322 compliant email address newtype for Rust.
-Supports both ASCII and UTF-8 (internationalized) addresses.
-This library is the most permissive of those tested, accepting some edge cases that others reject.
+A Rust [newtype](https://doc.rust-lang.org/rust-by-example/generics/new_types.html) for email address strings.
+The docs claim RFC 5322 compliance and support for UTF-8 addresses.
 
 ```rust
 use email_address::EmailAddress;
@@ -661,6 +692,8 @@ let is_valid = EmailAddress::is_valid("test@example.com");
 ```
 
 No configuration options available.
+
+Among our contenders its performance against the Stavros test suite is among the top 4, in part because it does not allow for comments in the address.
 
 ### validator (Rust)
 
@@ -698,16 +731,14 @@ The syntax of the basic usage example looks Perlish indeed:
 use Email::Valid;
 
 my $email = 'example@domain.com';
-my $valid = Email::Valid->address($email);
+my $valid = Email::Valid->address(-address => $email, -fqdn => 0);
 print $valid ? "Valid email" : "Invalid email";
 ```
 
-**Configuration options:**
+Of the config parameters mentioned in the docs, two are relevant to our test cases:
 
-- `-mxcheck` - Check for valid MX records.
-- `-tldcheck` - Validate the top-level domain.
-- `-fqdn` - Require a fully qualified domain name.
-- `-local_rules` - Apply local rules (disabled for this comparison).
+- `allow_ip` defaults to true and allows for IP addresses for the domain part. Sadly, the library still fails the two IP address examples which are an IPv6 and a decimal format IPv4.
+- `fqdn` defaults to true and requires the domain part to be fully qualified. For a fair comparison with other libraries, we set `-fqdn => 0` to allow single-segment domains like `stavros@io`, which are technically valid per RFC standards.
 
 ### libvldmail (C)
 
@@ -727,10 +758,13 @@ if (validator.success != 0) {
 }
 ```
 
-**Configuration options (preprocessor parameters):**
+Two configuration options are available:
 
-- `NO_UNICODE_MAIL_PLEASE` - Restrict validation to ASCII characters only.
+- `NO_UNICODE_MAIL_PLEASE` - A very polity flag for restricting validation to ASCII characters only.
 - `STRICT_VALIDATION` - Apply stricter RFC standards, marking deprecated formats as invalid.
+
+Overall, libvldmail does quite well on Stavros' test cases.
+It's the only library that lets the `hi@` example slip through as valid, something I'd consider a bug.
 
 ## Other Options not Reviewed
 

@@ -10,7 +10,7 @@ while (my $line = <$fh>) {
     chomp $line;
     next if $line eq '';
 
-    my $valid = Email::Valid->address($line);
+    my $valid = Email::Valid->address(-address => $line, -fqdn => 0);
     my $result = $valid ? "valid   " : "invalid ";
     print "$result$line\n";
 }
