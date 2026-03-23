@@ -546,7 +546,7 @@ Configuration options:
 - Version tested: 3.3.1 (published April 2024)
 - [Test code](https://github.com/jonemo/email-validation-olympics/tree/main/libraries/truemail)
 
-truemail offers the full menu of checks: Domain allow/deny lists, regex (the part we care about), DNS check, SMTP check.
+truemail offers the full menu of checks: Domain allow/deny lists, regex (the part we care about here), DNS check, SMTP check.
 
 > By default this validation not performs strictly following RFC 5322 standard, so you can override Truemail default regex pattern if you want.
 
@@ -738,7 +738,7 @@ print $valid ? "Valid email" : "Invalid email";
 Of the config parameters mentioned in the docs, two are relevant to our test cases:
 
 - `allow_ip` defaults to true and allows for IP addresses for the domain part. Sadly, the library still fails the two IP address examples which are an IPv6 and a decimal format IPv4.
-- `fqdn` defaults to true and requires the domain part to be fully qualified. For a fair comparison with other libraries, we set `-fqdn => 0` to allow single-segment domains like `stavros@io`, which are technically valid per RFC standards.
+- `fqdn` defaults to true and requires the domain part to be fully qualified. For a fair comparison with other libraries, I set `-fqdn => 0` to allow single-segment domains like `stavros@io`, which are technically valid per RFC standards.
 
 ### libvldmail (C)
 

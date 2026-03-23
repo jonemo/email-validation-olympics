@@ -1,83 +1,77 @@
-foo@bar.com
-{"valid": true, "description": "simple test case"}
-
-f o o@bar.com
-{"valid": false, "description": "contains spaces"}
-
 hi@stavros.io
-{"valid": true, "description": "", "source": "https://www.youtube.com/watch?v=xxX81WmXjPg"}
+{"valid": true, "description": "simple test case", "source": "https://www.youtube.com/watch?v=xxX81WmXjPg"}
 
 hi@
-{"valid": false, "description": "missing domain part"}
+{"valid": false, "description": "missing domain part", "source": "https://www.youtube.com/watch?v=xxX81WmXjPg"}
 
 hi+there@stavros.io
-{"valid": true, "description": "plus is allowed"}
+{"valid": true, "description": "plus is allowed", "source": "https://www.youtube.com/watch?v=xxX81WmXjPg"}
 
 stavros.k@stavros.io
-{"valid": true, "description": "dot in local part is valid"}
+{"valid": true, "description": "dot in local part is valid (separates \"atoms\")", "source": "https://www.youtube.com/watch?v=xxX81WmXjPg"}
 
 stavros.@stavros.io
-{"valid": false, "description": "dot at end of local part is invalid"}
+{"valid": false, "description": "dot at end of local part (empty atom)", "source": "https://www.youtube.com/watch?v=xxX81WmXjPg"}
 
 stavros..k@stavros.io
-{"valid": false, "description": "two dots in sequence in local part"}
+{"valid": false, "description": "two dots in sequence in local part (empty atom)", "source": "https://www.youtube.com/watch?v=xxX81WmXjPg"}
 
 !#$%&'*(-/=?@stavros.io
-{"valid": false, "description": ""}
+{"valid": false, "description": "unmatched opening parenthesis (unfinished comment)", "source": "https://www.youtube.com/watch?v=xxX81WmXjPg"}
 
 f*uck@stavros.io
-{"valid": true, "description": "asterisks are allowed in local part"}
+{"valid": true, "description": "asterisks are allowed in local part", "source": "https://www.youtube.com/watch?v=xxX81WmXjPg"}
 
 #$%!^/&@stavros.io
-{"valid": true, "description": ""}
+{"valid": true, "description": "all valid characters in local part", "source": "https://www.youtube.com/watch?v=xxX81WmXjPg"}
 
 h(a)i@stavros.io
-{"valid": false, "description": "parentheses in name part"}
+{"valid": false, "description": "parentheses (comment) in the middle of local part", "source": "https://www.youtube.com/watch?v=xxX81WmXjPg"}
 
 (sta)vros@stavros.io
-{"valid": true, "description": "(sta) is a comment"}
+{"valid": true, "description": "(sta) is a comment, valid at beginning", "source": "https://www.youtube.com/watch?v=xxX81WmXjPg"}
 
 stavros@stavros.io(io)
-{"valid": true, "description": "(io) is a comment"}
+{"valid": true, "description": "(io) is a comment, valid at end", "source": "https://www.youtube.com/watch?v=xxX81WmXjPg"}
 
 em@il@stavros.io
-{"valid": false, "description": "two at symbols"}
+{"valid": false, "description": "two @ symbols", "source": "https://www.youtube.com/watch?v=xxX81WmXjPg"}
 
-"<\"@\"".!#%$@stavros.io
-{"valid": false, "description": "illegal characters"}
+"<\"@\".!#%$@stavros.io
+{"valid": false, "description": "unmatched quotation mark (the initial one)", "source": "https://www.youtube.com/watch?v=xxX81WmXjPg"}
 
 <\"@\\".!#%$@stavros.io
-{"valid": false, "description": "illegal characters"}
+{"valid": false, "description": "unmatched quotation mark (the one before \".\")", "source": "https://www.youtube.com/watch?v=xxX81WmXjPg"}
 
 "hi@you"@stavros.io
-{"valid": true, "description": "quoted at symbol in local part is allowed"}
+{"valid": true, "description": "quoted @ symbol in local part is allowed", "source": "https://www.youtube.com/watch?v=xxX81WmXjPg"}
 
 "hi you"@stavros.io
-{"valid": true, "description": "quoted space in local part is allowed"}
+{"valid": true, "description": "quoted space in local part is allowed", "source": "https://www.youtube.com/watch?v=xxX81WmXjPg"}
 
 " "@stavros.io
-{"valid": true, "description": "quoted space in local part is allowed"}
+{"valid": true, "description": "quoted space in local part is allowed", "source": "https://www.youtube.com/watch?v=xxX81WmXjPg"}
 
 hi"@"you@stavros.io
-{"valid": false, "description": "the quotes must be dot-separated"}
+{"valid": false, "description": "quoted parts must be atoms (dot-separated)", "source": "https://www.youtube.com/watch?v=xxX81WmXjPg"}
 
-"<\"@\\"".!#%$@stavros.io
-{"valid": true, "description": "quotes are separated by dots"}
+"<\"@\\".!.#%$@stavros.io
+{"valid": true, "description": "quotes are separated by dots", "source": "https://www.youtube.com/watch?v=xxX81WmXjPg"}
 
 hi\ there@stavros.io
-{"valid": false, "description": "spaces must be quoted even if escaped"}
+{"valid": false, "description": "spaces must be quoted even if escaped", "source": "https://www.youtube.com/watch?v=xxX81WmXjPg"}
 
 cow@[dead::beef]
-{"valid": true, "description": "IPv6 domain part"}
+{"valid": true, "description": "IPv6 domain part", "source": "https://www.youtube.com/watch?v=xxX81WmXjPg"}
 
 stavros@io
-{"valid": true, "description": "domain part is TLD"}
+{"valid": true, "description": "domain part is TLD", "source": "https://www.youtube.com/watch?v=xxX81WmXjPg"}
 
 我買@屋企.香港
-{"valid": true, "description": ""}
+{"valid": true, "description": "valid Unicode characters", "source": "https://www.youtube.com/watch?v=xxX81WmXjPg"}
 
 1@23456789
-{"valid": false, "description": "23456789 is not a valid TLD"}
+{"valid": false, "description": "23456789 is not a valid TLD", "source": "https://www.youtube.com/watch?v=xxX81WmXjPg"}
 
 1@[23456789]
-{"valid": true, "description": "[23456789] is a decimal IPv4 address"}
+{"valid": true, "description": "[23456789] is a decimal IPv4 address", "source": "https://www.youtube.com/watch?v=xxX81WmXjPg"}
